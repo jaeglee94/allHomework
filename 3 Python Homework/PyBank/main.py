@@ -1,6 +1,8 @@
+#Import Libraries
 import os
 import csv
 
+#Initialize Variables
 file = os.path.join("budget_data.csv")
 dataSet=[]
 PL = []
@@ -8,35 +10,55 @@ months = 0
 netTotal = 0
 average = 0.0
 
+#Read CSV to list variable
 with open(file,"r",newline = "") as csvfile:
     csvreader = csv.reader(csvfile,delimiter =",")
 
     for lines in csvreader:
         dataSet.append(lines)
-        
+
+#Close file and create separate list just for P/L        
 for lines in dataSet[1:]:
     PL.append(int(lines[1]))
+    #determine month and netTotal through loop
     months += 1
     netTotal = netTotal + int(lines[1])
 
+#Determine average, max, min and initialize max profit/loss month variables
 average = round(netTotal/months,2)
 maxProfit = max(PL)
 maxLoss = min(PL)
 maxProfitMonth = ""
 maxLossMonth = ""
 
+#Search in list for max profit or max loss value, return month associated with value
 for lines in dataSet[1:]:
     if lines[1] == str(maxProfit):
         maxProfitMonth = lines[0]
     elif lines[1] == str(maxLoss):
         maxLossMonth = lines[0]
 
+#Initialize formatted currency variables
+netTotalFormatted = "{:,}".format(netTotal)
+averageFormatted = "{:,}".format(average)
+maxProfitFormatted = "{:,}".format(maxProfit)
+maxLossFormatted = "{:,}".format(maxLoss)
+
+
+#Print variables to console with block string
 Result = (f"Financial Analysis\n" 
           f"----------------------------\n"
           f"Total months: {months}\n"
-          f"Total: ${netTotal}\n"
-          f"Average Change: ${average}\n"
-          f"Greatest Increase in Profits: {maxProfitMonth} (${maxProfit}) \n"
-          f"Greatest Decrease in Profits: {maxLossMonth} (${maxLoss}) \n")
+          f"Total: ${netTotalFormatted}\n"
+          f"Average Change: ${averageFormatted}\n"
+          f"Greatest Increase in Profits: {maxProfitMonth} (${maxProfitFormatted}) \n"
+          f"Greatest Decrease in Profits: {maxLossMonth} (${maxLossFormatted}) \n")
 
+#Print Result to Terminal
 print(Result)
+
+output_path = os.path.join("result.txt")
+
+with open(output_path,"w",newline="") as textfile:
+    textfile.write(Result)
+
