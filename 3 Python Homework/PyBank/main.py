@@ -20,7 +20,7 @@ with open(file,"r",newline = "") as csvfile:
 #Close file and create separate list just for P/L        
 for lines in dataSet[1:]:
     PL.append(int(lines[1]))
-    #determine month and netTotal through loop
+    #determine months and netTotal through loop
     months += 1
     netTotal = netTotal + int(lines[1])
 
@@ -57,8 +57,10 @@ Result = (f"Financial Analysis\n"
 #Print Result to Terminal
 print(Result)
 
+#Set Output Text Pathway and file name
 output_path = os.path.join("result.txt")
 
+#Write to text file the result
 with open(output_path,"w",newline="") as textfile:
     textfile.write(Result)
 
