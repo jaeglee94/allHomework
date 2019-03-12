@@ -8,8 +8,7 @@ totalVote = 0
 
 def printDict(d):
     for key in d:
-        return (key,d[key])
-
+        print (key + ": " +str((d[key]/totalVote)*100) + "% (" + str(d[key]) + ")")
 
 with open(file,"r",newline = "") as csvfile:
     csvreader = csv.reader(csvfile,delimiter = ",")
@@ -24,12 +23,10 @@ for lines in dataset[1:]:
     else:
         voteDict[lines[2]] = 1
 
-
 Result = (f"Election Results \n"
           f"-------------------- \n"
           f"Total Votes: {totalVote} \n"
           f"-------------------- \n")
-
 
 print(Result)
 printDict(voteDict)
