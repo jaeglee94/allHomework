@@ -23,10 +23,11 @@ for lines in dataset[1:]:
     else:
         voteDict[lines[2]] = 1
 
-Result = (f"Election Results \n"
+def finalPrint(votes,d):
+        return (f"Election Results \n"
           f"-------------------- \n"
-          f"Total Votes: {totalVote} \n"
-          f"-------------------- \n")
+          f"Total Votes: {votes} \n"
+          f"--------------------")
 
-print(Result)
+print(finalPrint(totalVote,voteDict))
 printDict(voteDict)
