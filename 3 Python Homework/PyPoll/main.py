@@ -10,6 +10,13 @@ def printDict(d):
     for key in d:
         print (key + ": " +str((d[key]/totalVote)*100) + "% (" + str(d[key]) + ")")
 
+def findWinner(d):
+        winner = next(iter(d))
+        for key in d:
+                if d[key] > d[winner]:
+                        winner = key
+        return winner
+
 with open(file,"r",newline = "") as csvfile:
     csvreader = csv.reader(csvfile,delimiter = ",")
     
@@ -30,7 +37,8 @@ def finalPrint(votes,d):
           f"--------------------")
         printDict(voteDict)
         print(f"--------------------\n"
-          f"Winner: " + "\n"
+          f"Winner: " + findWinner(voteDict) + "\n"
           f"--------------------")
 
 finalPrint(totalVote,voteDict)
+findWinner(voteDict)
