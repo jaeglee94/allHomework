@@ -30,15 +30,35 @@ for lines in dataset[1:]:
     else:
         voteDict[lines[2]] = 1
 
-def finalPrint(votes,d):
-        print (f"Election Results \n"
+# def finalPrint(votes,d):
+#         print (f"Election Results \n"
+#           f"-------------------- \n"
+#           f"Total Votes: {votes} \n"
+#           f"--------------------")
+#         printDict(voteDict)
+#         print(f"--------------------\n"
+#           f"Winner: " + findWinner(voteDict) + "\n"
+#           f"--------------------")
+
+finalPrint = (f"Election Results \n"
           f"-------------------- \n"
-          f"Total Votes: {votes} \n"
-          f"--------------------")
-        printDict(voteDict)
-        print(f"--------------------\n"
+          f"Total Votes: {totalVote} \n"
+          f"--------------------\n")
+
+finalPrint2 = (f"--------------------\n"
           f"Winner: " + findWinner(voteDict) + "\n"
           f"--------------------")
 
-finalPrint(totalVote,voteDict)
-findWinner(voteDict)
+print(finalPrint)
+printDict(voteDict)
+print(finalPrint2)
+
+#Set Output Text Pathway and file name
+output_path = os.path.join("result.txt")
+
+#Write to text file the result
+with open(output_path,"w",newline="") as textfile:
+    textfile.write(finalPrint)
+    for key in voteDict:
+        textfile.write(key + ": " +str((voteDict[key]/totalVote)*100) + "% (" + str(voteDict[key]) + ") \n")
+    textfile.write(finalPrint2)
