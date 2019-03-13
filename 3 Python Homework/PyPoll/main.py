@@ -1,15 +1,20 @@
+#Import Libraries
 import os
 import csv
 
-file = os.path.join("election_data SHORTENED.csv")
+#Initialize file path and variables
+file = os.path.join("election_data.csv")
 dataset = []
 voteDict = {}
 totalVote = 0
 
+#Creating Functions
+#Creating function to print dictionary values to terminal
 def printDict(d):
     for key in d:
-        print (key + ": " +str((d[key]/totalVote)*100) + "% (" + str(d[key]) + ")")
+        print (key + ": " +str(round((d[key]/totalVote)*100,2)) + "% (" + str(d[key]) + ")")
 
+#Creating sorting function to find winner with most votes and return result
 def findWinner(d):
         winner = next(iter(d))
         for key in d:
@@ -17,12 +22,14 @@ def findWinner(d):
                         winner = key
         return winner
 
+#Reading CSV file to new dataset
 with open(file,"r",newline = "") as csvfile:
     csvreader = csv.reader(csvfile,delimiter = ",")
     
     for lines in csvreader:
         dataset.append(lines)
     
+#Finding total vote count and individual vote counts
 for lines in dataset[1:]:
     totalVote += 1
     if lines[2] in voteDict:
@@ -30,16 +37,7 @@ for lines in dataset[1:]:
     else:
         voteDict[lines[2]] = 1
 
-# def finalPrint(votes,d):
-#         print (f"Election Results \n"
-#           f"-------------------- \n"
-#           f"Total Votes: {votes} \n"
-#           f"--------------------")
-#         printDict(voteDict)
-#         print(f"--------------------\n"
-#           f"Winner: " + findWinner(voteDict) + "\n"
-#           f"--------------------")
-
+#Assigning result variables
 finalPrint = (f"Election Results \n"
           f"-------------------- \n"
           f"Total Votes: {totalVote} \n"
@@ -49,6 +47,7 @@ finalPrint2 = (f"--------------------\n"
           f"Winner: " + findWinner(voteDict) + "\n"
           f"--------------------")
 
+#Printing results to terminal
 print(finalPrint)
 printDict(voteDict)
 print(finalPrint2)
