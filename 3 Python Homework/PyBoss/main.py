@@ -20,6 +20,7 @@ dobClean = []
 ssnClean = []
 stateClean = []
 
+#initialize state dictionary
 us_state_abbrev = {
     'Alabama': 'AL',
     'Alaska': 'AK',
@@ -94,18 +95,23 @@ for lines in name:
     first.append(x[0])
     last.append(x[1])
 
+#rearrange DOB by splitting and re-concatenating
 for lines in dob:
     x = lines.split("-")
     dobClean.append(x[1] + "/" + x[2] + "/" + x[0])
 
+#rearrange SSN by splitting and re-concatenating
 for lines in ssn:
     x = lines.split("-")
     ssnClean.append("***-**-" + x[2])
 
+#get state abbreviations from dictionary and append to new list
 for lines in state:
     stateClean.append(us_state_abbrev.get(lines))
 
+#zip together lists
 final = zip(id,first,last,dobClean,ssnClean,stateClean)
 
+#print final list
 for lines in final:
     print(lines)
