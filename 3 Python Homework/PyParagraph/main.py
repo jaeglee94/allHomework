@@ -36,8 +36,10 @@ sent = re.split("(?<=[.!?]) +", text)
 #get number of sentences
 sentCount = len(sent)
 
+#get average sentence length
 sentLength = wordCount/sentCount
 
+#set output variable format
 output = (f"Paragraph Analysis \n"
          f"--------------------- \n"
          f"Apprximate Word Count: {wordCount} \n"
