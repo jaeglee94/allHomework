@@ -1,11 +1,13 @@
 #Import Libraries
 import os
 import csv
+from statistics import mean
 
 #Initialize Variables
 file = os.path.join("budget_data.csv")
 dataSet=[]
 PL = []
+plChange = []
 months = 0
 netTotal = 0
 average = 0.0
@@ -24,8 +26,14 @@ for lines in dataSet[1:]:
     months += 1
     netTotal = netTotal + int(lines[1])
 
+i = 1
+for i in range(len(PL)):
+    plChange.append(PL[i]-PL[i-1])
+plChange = plChange[1:]
+
+
 #Determine average, max, min and initialize max profit/loss month variables
-average = round(netTotal/months,2)
+average = round(mean(plChange),2)
 maxProfit = max(PL)
 maxLoss = min(PL)
 maxProfitMonth = ""
