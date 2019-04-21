@@ -9,7 +9,9 @@ select concat(first_name, " ", last_name) as "Actor Name" from actor;
 
 -- 2a. You need to find the ID number, first name, and last name of an actor, of whom you know only the first name, "Joe." 
 -- What is one query would you use to obtain this information?
-select actor_id,first_name,last_name from actor where first_name like "Joe";
+select actor_id,first_name,last_name
+from actor
+where first_name like "Joe";
 
 -- 2b. Find all actors whose last name contain the letters GEN:
 select * from actor where last_name like "%gen%";
@@ -65,14 +67,14 @@ left join address as a
 on (s.address_id=a.address_id);
 
 -- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
-select s.first_name, s.last_name,sum(p.amount)
+select s.first_name, s.last_name,sum(p.amount) as "Total Amount Rung"
 from staff s
 left join payment as p
 on (s.staff_id = p.staff_id)
 group by s.last_name, s.first_name;
 
 -- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
-select f.title, count(distinct(fa.actor_id))
+select f.title, count(distinct(fa.actor_id)) as "Actor Count"
 from film as f
 inner join film_actor as fa
 on (f.film_id = fa.film_id)
@@ -85,7 +87,7 @@ where f.title = "Hunchback Impossible";
 
 -- 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. 
 -- List the customers alphabetically by last name:
-select c.first_name, c.last_name,sum(p.amount)
+select c.first_name, c.last_name,sum(p.amount) as "Total Paid"
 from customer as c
 left join payment as p
 on (c.customer_id = p.customer_id)
@@ -101,15 +103,42 @@ from film as f, (select language_id, name from language
 where f.title like "K%" or title like "Q%";
 
 -- 7b. Use subqueries to display all actors who appear in the film Alone Trip.
-select a.first_name, a.last_name 
-from actor as a
-where a.actor_id in (
-	select fa.actor_id 
-	from film_actor as fa
-	where fa.film_id in (select film_id from film as f where title = "Alone Trip"));
+select a.first_name, a.last_name,finalAlo.title
+from actor as a,(
+	select actor_id, alo.title
+	from film_actor as fa, (select film_id, title from film as f where title = "Alone Trip") as alo
+	where alo.film_id = fa.film_id) as finalAlo
+where a.actor_id = finalAlo.actor_id;
 
 -- 7c. You want to run an email marketing campaign in Canada, for which you will need the 
 -- names and email addresses of all Canadian customers. Use joins to retrieve this information. 
+select first_name, last_name, email from customer 
+where address_id in (
+	select address_id from address
+	where city_id in(
+		select city_id from city
+		where country_id in (
+			select country_id from country
+			where country = "Canada")));
 
-
+select cust.first_name, cust.last_name, cust.email, coFin.country
+from customer as cust, (
+	select address_id, co2.country
+	from address as a,(
+		select c.city_id,co.country
+		from city as c, (
+			select country_id, country from country
+			where country = "Canada") as co
+		where c.country_id = co.country_id) as co2
+	where a.city_id = co2.city_id) as coFin
+where coFin.address_id = cust.address_id;
+            
+-- 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+select title
+from film
+where film_id in(
+	select film_id from film_category
+	where category_id in (
+		select category_id from category
+		where name = "Family"));
 
