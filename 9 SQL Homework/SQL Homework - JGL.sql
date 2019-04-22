@@ -136,7 +136,7 @@ where film_id in(
 		where name = "Family"));
 
 -- 7e. Display the most frequently rented movies in descending order.
-select combine.title, count(r.rental_id) from rental as r
+select combine.title, count(r.rental_id) as "# of Times Rented" from rental as r
 left join (select i.inventory_id,i.film_id,f.title from inventory as i
 left join film as f on i.film_id=f.film_id) as combine
 on r.inventory_id = combine.inventory_id
@@ -144,7 +144,7 @@ group by combine.title
 order by count(r.rental_id) desc;
 
 -- 7f. Write a query to display how much business, in dollars, each store brought in.
-select store_id, sum(p.amount) from payment as p
+select store_id, sum(p.amount) as "Earnings (in $)" from payment as p
 left join staff as s
 on p.staff_id = s.staff_id
 group by store_id;
