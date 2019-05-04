@@ -3,6 +3,7 @@ import sqlite3
 import os
 from datetime import datetime as dt
 from datetime import timedelta
+import statistics
 
 app = Flask(__name__)
 
@@ -10,7 +11,7 @@ app = Flask(__name__)
 def hello():
     return(render_template("index.html"))
 
-@app.route("/api/v1.0/precipiation")
+@app.route("/api/v1.0/precipitation")
 def precip():
     conn = sqlite3.connect(os.path.join("Resources","hawaii.sqlite"))
     curs = conn.cursor()
@@ -45,7 +46,7 @@ def temp():
     curs.execute("select date, tobs from measurement")
     rows = curs.fetchall()
     for row in rows:
-        if row[0] >= str(sDate):
+        if dt.strptime(row[0],'%Y-%m-%d') >= sDate:
             tList.append(row)
     return jsonify(tList)
 
@@ -53,13 +54,28 @@ def temp():
 def tempDetail(stDate):
     conn = sqlite3.connect(os.path.join("Resources","hawaii.sqlite"))
     curs = conn.cursor()
+    minDate = dt.strptime(stDate,'%Y-%m-%d')
     tList =[]
-    curs.execute("select max(date) from measurement")
+    curs.execute("select * from measurement order by Date asc")
     rows = curs.fetchall()
     for row in rows:
-        maxDate =(row[0])
-    return jsonify(tList)
+        if dt.strptime(row[2],'%Y-%m-%d') >= minDate:
+            tList.append(row[4])
+    return jsonify({"Min Temp":min(tList),"Avg Temp":round(statistics.mean(tList),2),"Max Temp":max(tList)})
 
-
+@app.route("/api/v1.0/tobs/<stDate>/<eDate>")
+def tempDetailRange(stDate,eDate):
+    conn = sqlite3.connect(os.path.join("Resources","hawaii.sqlite"))
+    curs = conn.cursor()
+    minDate = dt.strptime(stDate,'%Y-%m-%d')
+    maxDate = dt.strptime(eDate,'%Y-%m-%d')
+    tList =[]
+    curs.execute("select * from measurement order by Date asc")
+    rows = curs.fetchall()
+    for row in rows:
+        if dt.strptime(row[2],'%Y-%m-%d') >= minDate and dt.strptime(row[2],'%Y-%m-%d') <= maxDate:
+            tList.append(row[4])
+    return jsonify({"Min temp":min(tList),"Avg Temp":round(statistics.mean(tList),2),"Max Temp":max(tList)})
+    
 if __name__ == "__main__":
     app.run(debug=True)
