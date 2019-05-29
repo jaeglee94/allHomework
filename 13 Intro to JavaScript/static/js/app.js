@@ -2,11 +2,11 @@
 var tableData = data;
 
 //Select table body
-table = d3.select("tbody")
+var table = d3.select("tbody")
 
 //Populate table body with initial data
 for(i=0;i<tableData.length;i++){
-    row = table.append('tr')
+    var row = table.append('tr')
     if('datetime' in tableData[i]){
         row.append('td').text(tableData[i]['datetime'])
     }
@@ -30,10 +30,13 @@ for(i=0;i<tableData.length;i++){
     }
 }
 
+//get submit button object
 var submit = d3.select("#filter-btn");
 
+//submit on action
 submit.on("click", filterData);
 
+//submit button function
 function filterData() {
 
     // Prevent the page from refreshing
@@ -45,11 +48,13 @@ function filterData() {
     // Get the value property of the input element
     var inputValue = inputElement.property("value");
 
+    //filter data based on user input
     var filteredData = data.filter(sight => sight.datetime === inputValue);
     
     // Clear data
     table.text("")
 
+    //append filtered data to table
     for(i=0;i<filteredData.length;i++){
         row = table.append('tr')
         if('datetime' in filteredData[i]){
